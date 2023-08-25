@@ -5,6 +5,7 @@ import com.mariusblog.blogas.entity.Topic;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -26,4 +27,9 @@ public class TopicController {
         model.addAttribute("topics", topics);
         return "topics";
     }
+    @GetMapping("/{id}")
+    public String getTopic(@PathVariable Long id, Model model) {
+        Topic topic = topicService.getTopic(id);
+        model.addAttribute("topic", topic);
+        return "topic";
 }

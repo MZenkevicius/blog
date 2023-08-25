@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new Topics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</head>
+<body>
+<header th:insert="fragments/fragments.html :: header"> </header>
+
+<h1>New topic submission form</h1>
+<form th:action="@{/topics}" th:object="${newTopic}" method="post">
+    <p>
+        <label>Topic title:
+            <input type="text" th:field="*{title}" />
+        </label>
+    </p>
+    <p>Topic header:
+        <label>
+            <input type="text" th:field="*{header}" />
+        </label>
+    </p>
+    <p>
+        <input type="submit" value="Submit" />
+        <input type="reset" value="Reset" />
+    </p>
+</form>
+
+<footer th:insert="fragments/fragments.html :: footer"> </footer>
+
+</body>
+</html>

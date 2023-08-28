@@ -26,13 +26,6 @@ public class topicController {
         this.commentService = commentService;
     }
 
-    @GetMapping("/filter")
-    public String filterTopics(@RequestParam String topicTitle, Model model) {
-        List<Topic> topics = topicService.findTopicsByTitle(topicTitle);
-        model.addAttribute("topics", topics);
-        return "topics";
-    }
-
     @GetMapping
     public String getTopics(Model model) {
         List<Topic> topics = topicService.getAllTopics();
@@ -64,13 +57,15 @@ public class topicController {
     }
 
     @PostMapping
-    public String postTopics(Topic newTopic, Model model) {
+    public String addNewTopic(Topic newTopic, Model model) {
+        topicService.addNewTopic(newTopic);
+        return "redirect:/topics";
+    }
 
-        System.out.println(newTopic);
-
-        Topic savedTopic = topicService.addNewTopic(newTopic);
-        model.addAttribute("newTopic", savedTopic);
-        model.addAttribute("comment", new Comment());
-        return "topic";
+        @GetMapping("/filter")
+        public String filterTopics(@RequestParam String keyword, Model model) {
+            List<Topic> topics = topicService.filterTopicsByKeyword(keyword);
+            model.addAttribute("topics", topics);
+            return "topics";
     }
 }

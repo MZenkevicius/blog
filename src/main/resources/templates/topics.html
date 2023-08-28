@@ -15,6 +15,7 @@
     <div th:each="topic: *{topics}">
         <h3 th:text="${topic.title}"></h3>
         <section th:text="${topic.header}"></section>
+        <a th:href="@{/topics/{id}(id=${topic.id})}">Enter</a>
     </div>
 
     <h1>New topic submission form</h1>

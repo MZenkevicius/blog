@@ -15,6 +15,21 @@
     <section th:text="${comment.text}"></section>
 </div>
 
+<h3>New comment submission form</h3>
+<form th:action="@{/topics/__${id}__}" th:object="${comment}" method="post">
+    <p>
+        <label>Add comment:
+            <input type="hidden" th:field="*{id}" id="id">
+            <input type="text" th:field="*{text}" />
+        </label>
+    </p>
+    <p>
+        <input type="submit" value="Submit" />
+        <input type="reset" value="Reset" />
+    </p>
+</form>
+
+
 
 <a th:href="@{/topics}">Got to List all topics page</a>
 

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1" />
+    <title>Home</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="internationalization.js"></script>
+</head>
+<body>
+<h1 th:text="#{greeting}"></h1>
+<br /><br />
+<span th:text="#{lang.change}"></span>:
+<button type="button" th:text="#{lang.eng}" onclick="window.location.href='http://localhost:8080/topics/international?lang=en'"></button>
+<button type="button" th:text="#{lang.fr}" onclick="window.location.href='http://localhost:8080/topics/international?lang=fr'"></button>
+</body>
+</html>

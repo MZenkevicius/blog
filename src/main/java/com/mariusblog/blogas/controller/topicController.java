@@ -4,11 +4,16 @@ import com.mariusblog.blogas.Service.CommentService;
 import com.mariusblog.blogas.Service.TopicService;
 import com.mariusblog.blogas.entity.Comment;
 import com.mariusblog.blogas.entity.Topic;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/topics")
@@ -67,5 +72,34 @@ public class topicController {
             List<Topic> topics = topicService.filterTopicsByKeyword(keyword);
             model.addAttribute("topics", topics);
             return "topics";
+
+        }
+
+            @GetMapping("/list")
+            public String listBooks(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
+                final int currentPage = page.orElse(1);
+                final int pageSize = size.orElse(5);
+
+                System.out.println(">>>>>>>>>    " + currentPage);
+
+                Page<Topic> bookPage = topicService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+
+                model.addAttribute("topicPage", bookPage);
+
+                int totalPages = bookPage.getTotalPages();
+                if (totalPages > 0) {
+                    List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                            .boxed()
+                            .collect(Collectors.toList());
+                    model.addAttribute("pageNumbers", pageNumbers);
+                }
+
+                return "listTopics";
+
+            }
+
+    @GetMapping("/international")
+    public String getInternationalPage() {
+        return "international";
     }
 }

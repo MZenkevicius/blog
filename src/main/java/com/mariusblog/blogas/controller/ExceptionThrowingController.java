@@ -20,5 +20,11 @@ public class ExceptionThrowingController {
         return topicService.throwException();
     }
 
+    @GetMapping("/customException")
+    public String getCustomException() {
+        throw new CustomException("CustomException for a test reason");
+    }
+
+
 }
 

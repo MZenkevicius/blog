@@ -22,16 +22,16 @@ public class MyErrorResolver implements ErrorViewResolver {
      */
     @Override
     public ModelAndView resolveErrorView(HttpServletRequest request, HttpStatus status, Map<String, Object> model) {
-        model = new HashMap<>(model);
-        model.put("errorId", UUID.randomUUID().toString());
+        Map<String, Object> infoThatIsSafeToDisplay = new HashMap<>();
+        infoThatIsSafeToDisplay.put("errorId", UUID.randomUUID().toString());
 
         ModelAndView modelAndView;
         switch (status) {
             case NOT_FOUND:
-                modelAndView = new ModelAndView("error/404", model);
+                modelAndView = new ModelAndView("error/404", infoThatIsSafeToDisplay);
                 break;
             default:
-                modelAndView = new ModelAndView("error", model);
+                modelAndView = new ModelAndView("error", infoThatIsSafeToDisplay);
                 break;
         }
         return modelAndView;

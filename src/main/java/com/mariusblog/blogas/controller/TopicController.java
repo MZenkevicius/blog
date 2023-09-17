@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -30,7 +31,7 @@ public class TopicController {
 
 
     @GetMapping("/{id}")
-    public String getTopic(@PathVariable Long id,  Model model) {
+    public String getTopic(@PathVariable Long id, Model model) {
         model.addAttribute("id", id);
         model.addAttribute("comment", new Comment());
         Topic topic = topicService.getTopic(id);
@@ -67,6 +68,7 @@ public class TopicController {
         topicService.addNewTopic(newTopic);
         return "redirect:/topics";
     }
+
     @GetMapping("/filter")
     public String filterTopics(@RequestParam String keyword, Model model) {
         List<Topic> topics = topicService.filterTopicsByKeyword(keyword);
@@ -77,13 +79,12 @@ public class TopicController {
     /**
      * List topics using pageable
      * Request example:
-     *  http://localhost:8080/topics?size=3&page=0&sort=title,asc
+     * http://localhost:8080/topics?size=3&page=0&sort=title,asc
      */
     @GetMapping
     public String listTopics(Model model,
-                             @PageableDefault(sort = { "title"}, direction = Sort.Direction.DESC, size = 2, page = 1)
-                             Pageable pageable)
-    {
+                             @PageableDefault(sort = {"title"}, direction = Sort.Direction.DESC, size = 2, page = 1)
+                             Pageable pageable) {
         Page<Topic> topicsPage = topicService.findPaginated(pageable);
         model.addAttribute("topics", topicsPage);
 
@@ -97,5 +98,19 @@ public class TopicController {
 
         return "topics";
     }
+
+    @GetMapping("/exception")
+    public String getException() {
+        return topicService.throwException();
+    }
+
+    @ExceptionHandler
+    public String handleException(CustomStatusException exception, Model model) {
+        model.addAttribute("errorId", UUID.randomUUID().toString());
+        model.addAttribute("message", exception.getMessage());
+        return "customError";
+
+    }
 }
+
 

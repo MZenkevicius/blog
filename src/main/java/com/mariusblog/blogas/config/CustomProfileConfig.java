@@ -7,6 +7,7 @@ import org.springframework.core.env.Environment;
 
 import java.util.Arrays;
 
+@Profile(value = {"myCustomProfile"})
 @Configuration
 public class CustomProfileConfig {
 

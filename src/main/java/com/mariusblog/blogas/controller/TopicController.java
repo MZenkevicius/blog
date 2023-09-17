@@ -5,7 +5,6 @@ import com.mariusblog.blogas.Service.TopicService;
 import com.mariusblog.blogas.entity.Comment;
 import com.mariusblog.blogas.entity.Topic;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -14,35 +13,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/topics")
-public class topicController {
+public class TopicController {
 
-    private TopicService topicService;
+    private final TopicService topicService;
     private final CommentService commentService;
 
-    public void TopicController(TopicService topicService) {
-        this.topicService = topicService;
-    }
-
-    public topicController(TopicService topicService, CommentService commentService) {
+    public TopicController(TopicService topicService, CommentService commentService) {
         this.topicService = topicService;
         this.commentService = commentService;
     }
 
-    @GetMapping
-    public String getTopics(Model model) {
-        List<Topic> topics = topicService.getAllTopics();
-        model.addAttribute("topics", topics);
-        return "topics";
-    }
 
     @GetMapping("/{id}")
-    public String getTopic(@PathVariable Long id, Model model) {
+    public String getTopic(@PathVariable Long id,  Model model) {
         model.addAttribute("id", id);
         model.addAttribute("comment", new Comment());
         Topic topic = topicService.getTopic(id);
@@ -79,38 +67,35 @@ public class topicController {
         topicService.addNewTopic(newTopic);
         return "redirect:/topics";
     }
+    @GetMapping("/filter")
+    public String filterTopics(@RequestParam String keyword, Model model) {
+        List<Topic> topics = topicService.filterTopicsByKeyword(keyword);
+        model.addAttribute("topics", topics);
+        return "topics";
+    }
 
-        @GetMapping("/filter")
-        public String filterTopics(@RequestParam String keyword, Model model) {
-            List<Topic> topics = topicService.filterTopicsByKeyword(keyword);
-            model.addAttribute("topics", topics);
-            return "topics";
-
-        }
-
-    @GetMapping("/list")
+    /**
+     * List topics using pageable
+     * Request example:
+     *  http://localhost:8080/topics?size=3&page=0&sort=title,asc
+     */
+    @GetMapping
     public String listTopics(Model model,
-                             @PageableDefault (sort = { "title"}, direction = Sort.Direction.DESC, size = 2, page = 1)
+                             @PageableDefault(sort = { "title"}, direction = Sort.Direction.DESC, size = 2, page = 1)
                              Pageable pageable)
     {
-        Page<Topic> bookPage = topicService.findPaginated((PageRequest) pageable);
+        Page<Topic> topicsPage = topicService.findPaginated(pageable);
+        model.addAttribute("topics", topicsPage);
 
-                model.addAttribute("topicPage", bookPage);
+        int totalPages = topicsPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(0, totalPages - 1)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
 
-                int totalPages = bookPage.getTotalPages();
-                if (totalPages > 0) {
-                    List<Integer> pageNumbers = IntStream.rangeClosed(0, totalPages - 1)
-                            .boxed()
-                            .collect(Collectors.toList());
-                    model.addAttribute("pageNumbers", pageNumbers);
-                }
-
-                return "listTopics";
-
-            }
-
-    @GetMapping("/international")
-    public String getInternationalPage() {
-        return "international";
+        return "topics";
     }
 }
+

@@ -6,6 +6,9 @@
 <body>
 
 <header th:fragment="header" class="p-3 bg-dark text-white">
+
+    <script type="text/javascript"  th:src="@{/scripts.js}" defer></script>
+
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
@@ -15,22 +18,24 @@
             </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+                <li><a href="#" class="nav-link px-2 text-white" th:text="#{Features}">Features</a></li>
+                <li><a href="#" class="nav-link px-2 text-white" th:text="#{Pricing}">Pricing</a></li>
+                <li><a href="#" class="nav-link px-2 text-white" th:text="#{FAQs}">FAQs</a></li>
+                <li><a href="#" class="nav-link px-2 text-white" th:text="#{About}">About</a></li>
             </ul>
 
             <form th:action="@{/topics/filter}">
-                Filter: <input type="text" name="keyword" id="keyword" size="50" th:value="${keyword}" required />
-
+                <span th:text="#{Filter}">Filter:</span>
+                <input type="text" name="keyword" id="keyword" size="50" th:value="${keyword}" required />
                 <input type="submit" value="Search" />
             </form>
 
+            <button class="dropdown-item" type="button" onclick="setLanguage('fr')" th:text="#{lang.fr}"></button>
+            <button class="dropdown-item" type="button" onclick="setLanguage('en')" th:text="#{lang.en}"></button>
+
             <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2">Login</button>
-                <button type="button" class="btn btn-warning">Sign-up</button>
+                <button type="button" class="btn btn-outline-light me-2" th:text="#{Login}">Login</button>
+                <button type="button" class="btn btn-warning" th:text="#{Signup}">Sign-up</button>
             </div>
         </div>
     </div>

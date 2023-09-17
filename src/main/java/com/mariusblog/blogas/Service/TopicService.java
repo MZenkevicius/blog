@@ -41,22 +41,7 @@ public class TopicService {
 
     }
     public Page<Topic> findPaginated(PageRequest pageable) {
-        List<Topic> topics = topicRepository.findAll();
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<Topic> list;
-
-        if (topics.size() < startItem) {
-            list = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, topics.size());
-            list = topics.subList(startItem, toIndex);
-        }
-
-        Page<Topic> topicPage = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), topics.size());
-
-        return topicPage;
+        return topicRepository.findAll(pageable);
     }
 }
 

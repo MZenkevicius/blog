@@ -6,6 +6,9 @@ import com.mariusblog.blogas.entity.Comment;
 import com.mariusblog.blogas.entity.Topic;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +55,16 @@ public class topicController {
         Topic topic = topicService.getTopic(id);
         comment.setTopic(topic);
         commentService.addCommentToTopic(comment);
+        /*
+         * If Post-Redirect-Get pattern is not used then
+         * after user does POST, and gets server response,
+         * the last request made is POST.
+         * PROBLEM: if user presses refresh button - user makes last request (POST)
+         * and once more sends the last request to the server (thus duplicate data can occur on the server.
+         * (uncomment to try it out)
+         * */
+//        model.addAttribute("topic", topic);
+//        return "topic";
         return "redirect:/topics/" + id;
     }
 
@@ -75,20 +88,18 @@ public class topicController {
 
         }
 
-            @GetMapping("/list")
-            public String listBooks(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
-                final int currentPage = page.orElse(1);
-                final int pageSize = size.orElse(5);
-
-                System.out.println(">>>>>>>>>    " + currentPage);
-
-                Page<Topic> bookPage = topicService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+    @GetMapping("/list")
+    public String listTopics(Model model,
+                             @PageableDefault (sort = { "title"}, direction = Sort.Direction.DESC, size = 2, page = 1)
+                             Pageable pageable)
+    {
+        Page<Topic> bookPage = topicService.findPaginated((PageRequest) pageable);
 
                 model.addAttribute("topicPage", bookPage);
 
                 int totalPages = bookPage.getTotalPages();
                 if (totalPages > 0) {
-                    List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    List<Integer> pageNumbers = IntStream.rangeClosed(0, totalPages - 1)
                             .boxed()
                             .collect(Collectors.toList());
                     model.addAttribute("pageNumbers", pageNumbers);

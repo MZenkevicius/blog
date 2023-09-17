@@ -40,11 +40,10 @@
     </tr>
     </tbody>
 </table>
-<div th:if="${topicPage.totalPages > 0}" class="pagination"
-     th:each="pageNumber : ${pageNumbers}">
+<div th:if="${topicPage.totalPages > 0}" class="pagination" th:each="pageNumber : ${pageNumbers}">
     <a th:href="@{/topics/list(size=${topicPage.size}, page=${pageNumber})}"
-       th:text=${pageNumber}
-       th:class="${pageNumber==topicPage.number + 1} ? active"></a>
+       th:text="${pageNumber + 1}"
+       th:class="${pageNumber==topicPage.number} ? active"></a>
 </div>
 
 </body>
